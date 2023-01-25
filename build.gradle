@@ -3,7 +3,7 @@ apply plugin: 'idea'
 apply plugin: 'net.serenity-bdd.aggregator'
 apply plugin: 'maven-publish'
 
-group 'com.tevolvers'
+
 version '1.0.0'
 
 repositories {
@@ -16,16 +16,7 @@ configurations {
     }
 }
 
-task cucumber() {
-    dependsOn assemble, testClasses
-    doLast {
-        javaexec {
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--tags', "${tags}"]
-        }
-    }
-}
+
 
 buildscript {
     repositories {
