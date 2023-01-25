@@ -1,0 +1,54 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+apply plugin: 'maven-publish'
+
+group 'com.tevolvers'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--tags', "${tags}"]
+        }
+    }
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:3.2.1-RC1"
+    }
+}
+
+dependencies {
+    implementation "net.serenity-bdd:serenity-junit:3.2.1"
+    implementation "net.serenity-bdd:serenity-core:3.2.1"
+    implementation "net.serenity-bdd:serenity-cucumber:3.2.1"
+    implementation "net.serenity-bdd:serenity-screenplay:3.2.1"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:3.2.1"
+    implementation "org.seleniumhq.selenium:selenium-server:3.141.59"
+    implementation "org.slf4j:slf4j-simple:1.7.36"
+
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+gradle.startParameter.continueOnFailure = true
